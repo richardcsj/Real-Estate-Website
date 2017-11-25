@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 @Component({
@@ -12,27 +13,12 @@ export class SearchComponent implements OnInit {
 customerId:string;
 customer:any;
 	type:string;
-  constructor(private router: Router,private activatedRoute:ActivatedRoute,private userService:UserService,private _location: Location) { }
+  constructor(private router: Router,private activatedRoute:ActivatedRoute,private userService:UserService,
+    private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-  	.subscribe(
-  		(params: any) => {
-  		this.customerId = params['customerId'];
-  		this.userService.findUserById(this.customerId)
-  	  .subscribe(
-  	    (user:any)=>{
-  	      this.customer = user;
-  	      if(this.customer.role!='customer'){
-  	      	this.router.navigate(['profile',this.customerId,'menu']);
-  	      }
-  	    },
-  	    (error:any)=>{
-  	      console.log(error);
-
-  	    }
-  	    );
-  		})
+  	this.customer = this.sharedService.user;
+    this.customerId = this.customer._id;
   }
 
   searchByType() {

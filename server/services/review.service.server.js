@@ -1,4 +1,4 @@
-module.exports=function(app){
+module.exports=function(app,models){
 
 	reviews = [
 		{_id:"1",rate:5,text:"Very nice appartment",property:"12",customer:"345"},

@@ -4,7 +4,7 @@
 	  </div>
       <div class="row">
           <div class="col-xs-4">
-            <a [routerLink]="['/admin',userId,'user']" class="thumbnail">
+            <a [routerLink]="['/admin/user']" class="thumbnail">
               <span class="btn btn-lg btn-primary glyphicon glyphicon-user" ></span>
               <div class="caption">
                 <h3>Users Management</h3>
@@ -12,7 +12,7 @@
             </a>
           </div>
           <div class="col-xs-4">
-            <a [routerLink]="['/admin',userId,'property']" class="thumbnail">
+            <a [routerLink]="['/admin/property']" class="thumbnail">
               <span class="btn btn-lg btn-primary glyphicon glyphicon-home" ></span>
               <div class="caption">
                 <h3>Properties Management</h3>
@@ -20,7 +20,7 @@
             </a>
           </div>
           <div class="col-xs-4">
-            <a [routerLink]="['/admin',userId,'review']" class="thumbnail">
+            <a [routerLink]="['/admin/review']" class="thumbnail">
               <span class="btn btn-lg btn-primary glyphicon glyphicon-comment" ></span>
               <div class="caption">
                 <h3>Reviews Management</h3>
@@ -29,7 +29,7 @@
           </div>
       </div>
       <div class="row">
-        <div class="col-xs-12"><a class="btn btn-danger" [routerLink]="['/login']" >logout</a></div>
+        <div class="col-xs-12"><a class="btn btn-info" [routerLink]="['/profile']" >Back to profile</a></div>
       </div>
 
 </div> <!-- /container -->

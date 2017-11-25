@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {PropertyService} from "../../../services/property.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 
@@ -20,64 +21,24 @@ adminId:string;
   messageFlag:boolean;
   message : string;
   constructor(private userService: UserService,private propertyService: PropertyService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
+    this.admin = this.sharedService.user;
+    this.adminId = this.admin._id;
   	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.adminId = params['adminId'];
-		this.userService.findUserById(this.adminId)
-		  .subscribe(
-		    (user:any)=>{
-		      this.admin = user;
-		      if(this.admin.role!='admin'){
-		      	this.router.navigate(['profile',this.adminId,'menu']);
-		      }
-		    },
-		    (error:any)=>{
-		      console.log(error);
-
-		    }
-		    );
+    if(!this.admin.valid || this.admin.role!='admin'){
+		    this.router.navigate(['profile/menu']);
+		  }
 		this.propertyService.findAllProperties()
 			.subscribe(
 				(properties:any)=>{
 					this.properties = properties;
-					this.userService.findAllUsers()
-						.subscribe(
-								(users:any)=>{
-									this.users = users;
-									for(let i = 0;i<this.properties.length;i++){
-										for(let j =0;j<this.users.length;j++){
-											if(this.properties[i].owner._id === this.users[j]._id){
-												this.properties[i].owner = this.users[j];
-											}
-											if(this.properties[i].customer._id === this.users[j]._id){
-												this.properties[i].customer = this.users[j];
-											}
-										}
-                    this.propertyService.updateProperty(this.properties[i]._id,this.properties[i])
-                      .subscribe(
-                        (res:any) => {           
-
-                        },
-                        (error:any) => {
-                          
-                        }
-                      );
-									}
-								},
-								(error:any)=>{
-									console.log(error);
-								}
-							)
 				},
 				(error:any)=>{
 					console.log(error);
 				}
-				)
-  		});
+				);
 		
 }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import  {UserService} from '../../services/user.service';
 import {ActivatedRoute,Router} from "@angular/router";
+import {SharedService} from "../../services/shared.service";
 
 @Component({
   selector: 'app-menu',
@@ -11,24 +12,15 @@ export class MenuComponent implements OnInit {
 
   userId:string;
 	user:any;
-  constructor(private userService: UserService, private activatedRoute: ActivatedRoute,private router : Router) { }
+  constructor(private userService: UserService, private activatedRoute: ActivatedRoute,
+  	private router : Router,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.userId = params['userId'];
-		this.userService.findUserById(this.userId)
-		    .subscribe(
-		      (user:any)=>{
-		        this.user = user;
-		      },
-		      (error:any)=>{
-		        console.log(error);
-		      }
-		    )
-		} 
-	);
+  	this.user = this.sharedService.user;
+  	this.userId = this.user._id;
+    if(!this.user.valid){
+      this.router.navigate(['profile']);
+    }
 	
   }
 

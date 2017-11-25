@@ -1,4 +1,4 @@
-module.exports=function(app){
+module.exports=function(app,models){
 
 properties = [
     {_id:"12",type:"appartment",description:"Apartment For Rent Unfurnished Rental Studio, 1 bath",size:950,latitude:40.702029,longitude:-73.989844,

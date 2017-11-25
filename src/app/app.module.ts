@@ -6,6 +6,9 @@ import {FormsModule} from '@angular/forms';
 import {UserService} from './services/user.service';
 import {PropertyService} from './services/property.service';
 import {ReviewService} from './services/review.service';
+import {SharedService} from './services/shared.service';
+import {AuthGuard} from './services/auth-guard.service';
+
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
@@ -26,6 +29,7 @@ import { OwnerPropertyComponent } from './components/owner/property/property.com
 import { OwnerReviewComponent } from './components/owner/review/review.component';
 import { SearchComponent } from './components/customer/search/search.component';
 import { ListComponent } from './components/customer/list/list.component';
+
 
 @NgModule({
   declarations: [
@@ -55,7 +59,7 @@ import { ListComponent } from './components/customer/list/list.component';
     FormsModule,
     Routing
   ],
-  providers: [UserService,PropertyService,ReviewService],
+  providers: [UserService,PropertyService,ReviewService,SharedService,AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

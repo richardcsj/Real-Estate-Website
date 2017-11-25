@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {ReviewService} from "../../../services/review.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 @Component({
@@ -15,27 +16,15 @@ adminId:string;
   reviews:any;
   admin:any;
   constructor(private userService: UserService,private reviewService: ReviewService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.adminId = params['adminId'];
-		this.userService.findUserById(this.adminId)
-		  .subscribe(
-		    (user:any)=>{
-		      this.admin = user;
-		      if(this.admin.role!='admin'){
-		      	this.router.navigate(['profile',this.adminId,'menu']);
-		      }
-		    },
-		    (error:any)=>{
-		      console.log(error);
-
-		    }
-		    );
-		this.reviewService.findAllReviews()
+  	this.admin = this.sharedService.user;
+    this.adminId = this.admin._id;
+	if(!this.admin.valid || this.admin.role!='admin'){
+	  	this.router.navigate(['profile/menu']);
+	  }
+    this.reviewService.findAllReviews()
 			.subscribe(
 				(reviews:any)=>{
 					this.reviews = reviews;
@@ -43,8 +32,7 @@ adminId:string;
 				(error:any)=>{
 					console.log(error);
 				}
-				)
-  		});
+				);
   }
   remove(reviewId:string){
   	this.reviewService.deleteReview(reviewId)

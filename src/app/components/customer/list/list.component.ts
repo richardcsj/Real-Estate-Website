@@ -3,6 +3,7 @@ import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {PropertyService} from "../../../services/property.service";
 import {ReviewService} from "../../../services/review.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 @Component({
@@ -22,28 +23,12 @@ customerId:string;
   message : string;
   type:string;
   constructor(private userService: UserService,private propertyService: PropertyService,private reviewService: ReviewService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.customerId = params['customerId'];
-		this.type = params['type'];
-		this.userService.findUserById(this.customerId)
-		  .subscribe(
-		    (user:any)=>{
-		      this.customer = user;
-		      if(this.customer.role!='customer'){
-		      	this.router.navigate(['profile',this.customerId,'menu']);
-		      }
-		    },
-		    (error:any)=>{
-		      console.log(error);
-
-		    }
-		    );
-		this.propertyService.findAllProperties()
+  	this.customer = this.sharedService.user;
+    this.customerId = this.customer._id;
+	this.propertyService.findAllProperties()
 			.subscribe(
 				(properties:any)=>{
 					this.properties = properties;
@@ -74,8 +59,7 @@ customerId:string;
 				(error:any)=>{
 					console.log(error);
 				}
-				)
-  		});
+				);
 
   }
   details(property:any){

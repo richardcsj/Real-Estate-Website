@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 @Component({
@@ -19,26 +20,14 @@ adminId:string;
   messageFlag:boolean;
   message : string;
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-  	.subscribe(
-  		(params: any) => {
-  		this.adminId = params['adminId'];
-  		this.userService.findUserById(this.adminId)
-  	  .subscribe(
-  	    (user:any)=>{
-  	      this.admin = user;
-  	      if(this.admin.role!='admin'){
-  	      	this.router.navigate(['profile',this.adminId,'menu']);
-  	      }
-  	    },
-  	    (error:any)=>{
-  	      console.log(error);
-
-  	    }
-  	    );
+    this.admin = this.sharedService.user;
+    this.adminId = this.admin._id;
+  	if(!this.admin.valid || this.admin.role!='admin'){
+  	  this.router.navigate(['profile/menu']);
+  	}
   	this.userService.findAllUsers()
   		.subscribe(
   			(users:any)=>{
@@ -47,10 +36,7 @@ adminId:string;
   			(error:any)=>{
   				console.log(error);
   			}
-  			)
-  		}
-  	);
-	
+  			);
   }
   details(userId:string){
   	this.router.navigate([userId],{relativeTo:this.activatedRoute});

@@ -30,33 +30,30 @@ export class RegisterComponent implements OnInit {
       this.username = this.registerForm.value.username;
       this.password = this.registerForm.value.password;
       this.pwdconfirmation = this.registerForm.value.pwdconfirmation;
-      this.registerAs = this.registerForm.value.registerAs;
-      this.userService.findUserByUsername(this.username)
-      .subscribe(
-        (user:any)=> {
-            this.errorFlag = true;
-            this.errorMsg = "The username is already taken";
-        },
-        (error:any)=>{
+      this.registerAs = this.registerForm.value.registerAs; 
+
+      if(this.username == ''|| this.password == '' || this.pwdconfirmation == '' || this.registerAs  == ''){
+        this.errorFlag = true;
+        this.errorMsg = 'all fields are mandatory';
+
+      }else{
           if(this.password == this.pwdconfirmation){
-              let user = {_id: "", username: this.username, password: this.password,role:this.registerAs};
-              this.userService.createUser(user)
-              .subscribe(
-                (newUser:any)=>{
-                  //redirect to profile
-                  this.router.navigate(['/profile',newUser._id]);
-                },
-                (error:any)=>{
-                  this.errorFlag = true;
-                  this.errorMsg = "Couldn't create user";
-                }
+              this.userService.register(this.username, this.password,this.registerAs)
+                 .subscribe(
+                   (data: any) => {
+                     this.router.navigate(['/profile']);
+                   },
+                   (error: any) => {
+                     this.errorMsg = error._body;
+                   }
                 );
+
             }else{
               this.errorFlag = true;
               this.errorMsg = "password and password confirmation are not the same";
             }
-        }
-        );
+        
+      }
     }
     cancel(){
       this.router.navigate(['/login']);

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
+import {SharedService} from "../../../services/shared.service";
 
 @Component({
   selector: 'app-profile',
@@ -23,32 +24,25 @@ export class ProfileComponent implements OnInit {
   messageFlag:boolean;
   message : string;
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute,
-  	private router: Router) { }
+  	private router: Router,private sharedService : SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.userId = params['userId'];
-		}
-	);
-	this.userService.findUserById(this.userId)
-  .subscribe(
-    (user:any)=>{
-      this.user = user;
+  	
+      this.user = this.sharedService.user;
+      this.userId = this.user['_id'];
       this.username = this.user['username'];
       this.email = this.user['email'];
       this.firstName = this.user['firstName'];
       this.lastName = this.user['lastName'];
       this.valid = this.user['valid'];
       this.phone = this.user['phone'];
-      this.dob = this.user['dob'];
-    },
-    (error:any)=>{
-      console.log(error);
-
-    }
-    );
+      let fdate= this.user['dob'].split("-");
+      let day = fdate[2].split("T")[0];
+      let month = fdate[1];
+      let year = fdate[0];
+      let formattedDate = day+'/'+month+'/'+year;
+      this.dob = formattedDate;
+    
 	
 	}
   update(){
@@ -58,8 +52,8 @@ export class ProfileComponent implements OnInit {
       this.user['email'] = this.email;
       this.user['firstName'] = this.firstName;
       this.user['lastName'] = this.lastName;
-	  this.user['phone'] = this.phone;
-      this.user['dob'] = this.dob;      
+	    this.user['phone'] = this.phone;
+      this.user['dob'] = this.dob;  
       
       this.userService.updateUser(this.userId,this.user)
         .subscribe(
@@ -79,8 +73,10 @@ export class ProfileComponent implements OnInit {
       //redirect to menu
         this.router.navigate(['menu'],{relativeTo:this.activatedRoute});
   	}
-  	logout(){
-  		//redirect to home
-        this.router.navigate(['/']);
-  	}
+  	logout() {
+   this.userService.logout()
+     .subscribe(
+       (data: any) => this.router.navigate(['/login'])
+     );
+}
 }

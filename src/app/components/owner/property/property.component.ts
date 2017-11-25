@@ -3,6 +3,7 @@ import {NgForm} from '@angular/forms';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {PropertyService} from "../../../services/property.service";
+import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 
 @Component({
@@ -31,26 +32,11 @@ export class OwnerPropertyComponent implements OnInit {
   messageFlag:boolean;
   message : string;
   constructor(private userService: UserService,private propertyService: PropertyService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService) { }
 
   ngOnInit() {
-  	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.ownerId = params['ownerId'];
-		this.userService.findUserById(this.ownerId)
-		  .subscribe(
-		    (user:any)=>{
-		      this.owner = user;
-		      if(this.owner.role!='owner'){
-		      	this.router.navigate(['profile',this.ownerId,'menu']);
-		      }
-		    },
-		    (error:any)=>{
-		      console.log(error);
-
-		    }
-		    );
+  	this.owner = this.sharedService.user;
+    this.ownerId = this.owner._id;
 		this.propertyService.findPropertiesByOwner(this.ownerId)
 			.subscribe(
 				(properties:any)=>{
@@ -84,8 +70,8 @@ export class OwnerPropertyComponent implements OnInit {
 				(error:any)=>{
 					console.log(error);
 				}
-				)
-  		});
+				);
+  		
   }
   save(){
   	let property = {type:this.type,description:this.description,
