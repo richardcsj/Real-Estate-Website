@@ -23,12 +23,14 @@ module.exports = function(app,mongoose){
 	}
 	function findAllUsers(user){
 		return UserModel
-			.find();		
+			.find()
+			.populate('validatedBy');		
 	}
 
 	function findUserById(userId){
 		return UserModel
-			.findById(userId);
+			.findById(userId)
+			.populate('validatedBy');
 	}
 	
 	function findUserByUsername(username){

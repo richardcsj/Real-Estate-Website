@@ -6,13 +6,6 @@ module.exports= function(app,models){
 
 	passport.use(new LocalStrategy(localStrategy));
 
-	/*
-	users = [
-    {_id: "123", username: "alice", password: "alice", firstName: "Alice", lastName: "Wonder",valid:true,email:"alice@admin.com",phone:"(123) 456-7891",dob:"01/01/1991",role:"admin"},
-    {_id: "234", username: "bob", password: "bob", firstName: "Bob", lastName: "Marley",valid:true,email:"bob@owner.com",phone:"(123) 456-7891",dob:"02/01/1991",role:"owner"},
-    {_id: "345", username: "charly", password: "charly", firstName: "Charly", lastName: "Garcia",valid:true,email:"charlie@customer.com",phone:"(123) 456-7891",dob:"03/01/1991",role:"customer"},
-    {_id: "456", username: "jannunzi", password: "jannunzi", firstName: "Jose", lastName: "Annunzi",valid:false,email:"jose@customer.com",phone:"(123) 456-7891",dob:"04/01/1991",role:"customer"}];
-	*/
     api = {
     'createUser': createUser,
     'findAllUsers':findAllUsers,

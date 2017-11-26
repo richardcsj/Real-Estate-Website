@@ -10,6 +10,7 @@ module.exports = function(app,mongoose){
 		phone: String,
 		dateCreated: Date,
 		valid: Boolean,
+		validatedBy : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 		dob: Date
 
     });

@@ -409,7 +409,6 @@ var PropertyComponent = (function () {
         var _this = this;
         this.admin = this.sharedService.user;
         this.adminId = this.admin._id;
-        this.activatedRoute.params;
         if (!this.admin.valid || this.admin.role != 'admin') {
             this.router.navigate(['profile/menu']);
         }
@@ -426,7 +425,7 @@ var PropertyComponent = (function () {
     PropertyComponent.prototype.activate = function (property) {
         var _this = this;
         property.valid = true;
-        property.validatedBy = this.admin;
+        property.validatedBy = this.admin._id;
         this.propertyService.updateProperty(property._id, property)
             .subscribe(function (res) {
             _this.messageFlag = true;
@@ -640,6 +639,7 @@ var UserDetailsComponent = (function () {
             _this.userService.findUserById(_this.userId)
                 .subscribe(function (user) {
                 _this.user = user;
+                console.log(_this.user);
             }, function (error) {
                 console.log(error);
             });
@@ -760,7 +760,7 @@ var UserComponent = (function () {
     UserComponent.prototype.activate = function (user) {
         var _this = this;
         user.valid = true;
-        user.validatedBy = this.admin;
+        user.validatedBy = this.admin._id;
         this.userService.updateUser(user._id, user)
             .subscribe(function (res) {
             _this.messageFlag = true;
@@ -773,7 +773,6 @@ var UserComponent = (function () {
     UserComponent.prototype.deactivate = function (user) {
         var _this = this;
         user.valid = false;
-        user.validatedBy = {};
         this.userService.updateUser(user._id, user)
             .subscribe(function (res) {
             _this.messageFlag = true;
@@ -1504,7 +1503,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/components/owner/property/property.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n\t  <div \n\t    class=\"alert alert-info\">\n      <a (click)=\"back()\" class=\"pull-left\" > <i class=\"glyphicon glyphicon-chevron-left\"></i> </a>\n\t    Connected as  <b>{{owner.username}}</b> | role :<b> Owner </b>.<br>\n\t  </div>\n      <div *ngIf=\"errorFlag\"\n        class=\"alert alert-danger\">\n        {{errorMsg}}\n      </div>\n      <div *ngIf=\"messageFlag\"\n        class=\"alert alert-success\">\n        {{message}}\n      </div>\n      <div class=\"row\">\n      \t<div class=\"col-xs-4\">\n      \t\t<div class=\"panel panel-primary\">\n\t\t\t  <div class=\"panel-heading\">\n\t\t\t    <h3 class=\"panel-title\">Add/Update property</h3>\n\t\t\t  </div>\n\t  \t\t<div class=\"panel-body\" style=\"color:black\">\n\t\t\t    <form class=\"form-horizontal\" #f=\"ngForm\">\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"propertyId\" class=\"control-label\">Id</label>\n\t\t\t\t      <input type=\"text\" class=\"form-control\" id=\"propertyId\" name=\"propertyId\" placeholder=\"id\" [(ngModel)]=\"propertyId\" >\n\t\t\t\t  </div>\n\t\t\t\t  \t<div class=\"form-group\">\n\n\t\t\t\t    <label for=\"type\" class=\"control-label\">Type</label>\n\t\t\t\t      <select class=\"form-control\" id=\"type\" name=\"type\" [(ngModel)]=\"type\">\n\t\t\t\t      \t<option value=\"appartment\">appartment</option>\n\t\t\t\t      \t<option value=\"garage\">garage</option>\n\t\t\t\t      \t<option value=\"house\">house</option>\n\t\t\t\t      \t<option value=\"offices\">offices</option>\n\t\t\t\t      </select>\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"description\" class=\"control-label\">Description</label>\n\t\t\t\t      <input type=\"text\" class=\"form-control\" id=\"description\" name=\"description\" placeholder=\"Description\" [(ngModel)]=\"description\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"size\" class=\"control-label\">Size</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"size\" name=\"size\" placeholder=\"Size in m²\" [(ngModel)]=\"size\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"price\" class=\"control-label\">Price</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"price\" name=\"price\" placeholder=\"Price in $ USD\" [(ngModel)]=\"price\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"latitude\" class=\"control-label\">Latitude</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"latitude\" name=\"latitude\" placeholder=\"latitude\" [(ngModel)]=\"latitude\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"longitude\" class=\"control-label\">Longitude</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"longitude\" name=\"longitude\" placeholder=\"longitude\" [(ngModel)]=\"longitude\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <div>\n\t\t\t\t      <button (click)=\"save()\" class=\"btn btn-primary\">Save</button> <button (click)=\"update()\" class=\"btn btn-info\">Update</button>\n\t\t\t\t    </div>\n\t\t\t\t  </div>\n\t\t\t\t</form>\n\t\t\t  </div>\n\t\t\t</div>\n      \t</div>\n      \t<div class=\"col-xs-8\">\n      \t\t<table class=\"table table-bordered\">\n\t          <tr>\n\t            <th>#</th>\n\t            <th>type</th>\n\t            <th>Available</th>\n\t            <th>Customer</th>\n\t            <th>Verified</th>\n\t            <th>actions</th>\n\t          </tr>\n\t          <tr *ngFor=\"let property of properties\">\n\t            <td>{{property._id}}</td>\n\t            <td>{{property.type}}</td>\n\t            <td>{{property.available}}</td>\n\t            <td><a [routerLink]=\"['../client']\" >{{property.customer.username}}</a></td>\n\t            <td>{{property.valid}}</td>\n\t            <td><button (click)=\"edit(property)\" class=\"btn btn-primary\" ><i class=\"glyphicon glyphicon-check\n\" ></i></button></td>\n\t          </tr>\n\t      </table>\n      \t</div>\n      </div>\n\n</div> <!-- /container -->"
+module.exports = "<div class=\"container\">\n\t  <div \n\t    class=\"alert alert-info\">\n      <a (click)=\"back()\" class=\"pull-left\" > <i class=\"glyphicon glyphicon-chevron-left\"></i> </a>\n\t    Connected as  <b>{{owner.username}}</b> | role :<b> Owner </b>.<br>\n\t  </div>\n      <div *ngIf=\"errorFlag\"\n        class=\"alert alert-danger\">\n        {{errorMsg}}\n      </div>\n      <div *ngIf=\"messageFlag\"\n        class=\"alert alert-success\">\n        {{message}}\n      </div>\n      <div class=\"row\">\n      \t<div class=\"col-xs-4\">\n      \t\t<div class=\"panel panel-primary\">\n\t\t\t  <div class=\"panel-heading\">\n\t\t\t    <h3 class=\"panel-title\">Add/Update property</h3>\n\t\t\t  </div>\n\t  \t\t<div class=\"panel-body\" style=\"color:black\">\n\t\t\t    <form class=\"form-horizontal\" #f=\"ngForm\">\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"propertyId\" class=\"control-label\">Id</label>\n\t\t\t\t      <input type=\"text\" class=\"form-control\" id=\"propertyId\" name=\"propertyId\" placeholder=\"id\" [(ngModel)]=\"propertyId\" >\n\t\t\t\t  </div>\n\t\t\t\t  \t<div class=\"form-group\">\n\n\t\t\t\t    <label for=\"type\" class=\"control-label\">Type</label>\n\t\t\t\t      <select class=\"form-control\" id=\"type\" name=\"type\" [(ngModel)]=\"type\">\n\t\t\t\t      \t<option value=\"appartment\">appartment</option>\n\t\t\t\t      \t<option value=\"garage\">garage</option>\n\t\t\t\t      \t<option value=\"house\">house</option>\n\t\t\t\t      \t<option value=\"offices\">offices</option>\n\t\t\t\t      </select>\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"description\" class=\"control-label\">Description</label>\n\t\t\t\t      <input type=\"text\" class=\"form-control\" id=\"description\" name=\"description\" placeholder=\"Description\" [(ngModel)]=\"description\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"size\" class=\"control-label\">Size</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"size\" name=\"size\" placeholder=\"Size in m²\" [(ngModel)]=\"size\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"price\" class=\"control-label\">Price</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"price\" name=\"price\" placeholder=\"Price in $ USD\" [(ngModel)]=\"price\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"latitude\" class=\"control-label\">Latitude</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"latitude\" name=\"latitude\" placeholder=\"latitude\" [(ngModel)]=\"latitude\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <label for=\"longitude\" class=\"control-label\">Longitude</label>\n\t\t\t\t      <input type=\"number\" class=\"form-control\" id=\"longitude\" name=\"longitude\" placeholder=\"longitude\" [(ngModel)]=\"longitude\">\n\t\t\t\t  </div>\n\t\t\t\t  <div class=\"form-group\">\n\t\t\t\t    <div>\n\t\t\t\t      <button (click)=\"save()\" class=\"btn btn-primary\">Save</button> <button (click)=\"update()\" class=\"btn btn-info\">Update</button>\n\t\t\t\t    </div>\n\t\t\t\t  </div>\n\t\t\t\t</form>\n\t\t\t  </div>\n\t\t\t</div>\n      \t</div>\n      \t<div class=\"col-xs-8\">\t\t\n      \t\t<table class=\"table table-bordered\">\n\t          <tr>\n\t            <th>#</th>\n\t            <th>type</th>\n\t            <th>Available</th>\n\t            <th>Customer</th>\n\t            <th>Verified</th>\n\t            <th>actions</th>\n\t          </tr>\n\t          <tr *ngFor=\"let property of properties\">\n\t            <td>{{property._id}}</td>\n\t            <td>{{property.type}}</td>\n\t            <td>{{property.available}}</td>\n\t            <td><a *ngIf=\"property.customer\" [routerLink]=\"['../client']\" >{{property.customer.username}}</a></td>\n\t            <td>{{property.valid}}</td>\n\t            <td><button (click)=\"edit(property)\" class=\"btn btn-primary\" ><i class=\"glyphicon glyphicon-check\n\" ></i></button> | <button (click)=\"delete(property._id)\" class=\"btn btn-danger\" ><i class=\"glyphicon glyphicon-remove\n\" ></i></button></td>\n\t          </tr>\n\t      </table>\n      \t</div>\n      </div>\n\n</div> <!-- /container -->"
 
 /***/ }),
 
@@ -1546,38 +1545,15 @@ var OwnerPropertyComponent = (function () {
         this.sharedService = sharedService;
     }
     OwnerPropertyComponent.prototype.ngOnInit = function () {
-        var _this = this;
         this.owner = this.sharedService.user;
         this.ownerId = this.owner._id;
-        this.propertyService.findPropertiesByOwner(this.ownerId)
-            .subscribe(function (properties) {
-            _this.properties = properties;
-            _this.userService.findAllUsers()
-                .subscribe(function (users) {
-                _this.users = users;
-                for (var i = 0; i < _this.properties.length; i++) {
-                    for (var j = 0; j < _this.users.length; j++) {
-                        if (_this.properties[i].customer._id === _this.users[j]._id) {
-                            _this.properties[i].customer = _this.users[j];
-                        }
-                    }
-                    _this.propertyService.updateProperty(_this.properties[i]._id, _this.properties[i])
-                        .subscribe(function (res) {
-                    }, function (error) {
-                    });
-                }
-            }, function (error) {
-                console.log(error);
-            });
-        }, function (error) {
-            console.log(error);
-        });
+        this.loadData();
     };
     OwnerPropertyComponent.prototype.save = function () {
         var _this = this;
         var property = { type: this.type, description: this.description,
             valid: false, available: true, size: this.size, price: this.price,
-            owner: { _id: this.ownerId }, customer: { _id: "" }, latitude: this.latitude, longitude: this.longitude, validatedBy: "" };
+            owner: this.owner._id, latitude: this.latitude, longitude: this.longitude };
         this.propertyService.createProperty(this.ownerId, property)
             .subscribe(function (res) {
             _this.messageFlag = true;
@@ -1586,12 +1562,20 @@ var OwnerPropertyComponent = (function () {
             _this.errorFlag = true;
             _this.errorMsg = 'cannot create property';
         });
+        this.loadData();
     };
     OwnerPropertyComponent.prototype.update = function () {
         var _this = this;
         var property = { _id: this.propertyId, type: this.type, description: this.description,
-            valid: false, available: true, size: this.size, price: this.price,
-            owner: { _id: this.ownerId }, customer: this.customer, latitude: this.latitude, longitude: this.longitude, validatedBy: "" };
+            valid: this.valid, available: this.available, size: this.size, price: this.price,
+            owner: this.ownerId,
+            latitude: this.latitude, longitude: this.longitude, customer: null, validatedBy: null };
+        if (this.customer) {
+            property.customer = this.customer._id;
+        }
+        if (this.validatedBy) {
+            property.validatedBy = this.validatedBy._id;
+        }
         this.propertyService.updateProperty(property._id, property)
             .subscribe(function (res) {
             _this.messageFlag = true;
@@ -1600,6 +1584,7 @@ var OwnerPropertyComponent = (function () {
             _this.errorFlag = true;
             _this.errorMsg = 'cannot update property';
         });
+        this.loadData();
     };
     OwnerPropertyComponent.prototype.edit = function (property) {
         this.propertyId = property._id;
@@ -1610,9 +1595,33 @@ var OwnerPropertyComponent = (function () {
         this.latitude = property.latitude;
         this.longitude = property.longitude;
         this.customer = property.customer;
+        this.valid = property.valid;
+        this.available = property.available;
+        this.validatedBy = property.validatedBy;
+    };
+    OwnerPropertyComponent.prototype.delete = function (propertyId) {
+        var _this = this;
+        this.propertyService.deleteProperty(propertyId)
+            .subscribe(function (deleted) {
+            _this.messageFlag = true;
+            _this.message = 'Property deleted Successfully';
+        }, function (error) {
+            _this.errorFlag = true;
+            _this.errorMsg = 'cannot delete property';
+        });
+        this.loadData();
     };
     OwnerPropertyComponent.prototype.back = function () {
         this._location.back();
+    };
+    OwnerPropertyComponent.prototype.loadData = function () {
+        var _this = this;
+        this.propertyService.findPropertiesByOwner(this.ownerId)
+            .subscribe(function (properties) {
+            _this.properties = properties;
+        }, function (error) {
+            console.log(error);
+        });
     };
     return OwnerPropertyComponent;
 }());

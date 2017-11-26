@@ -29,21 +29,22 @@ export class UserDetailsComponent implements OnInit {
   	  this.router.navigate(['profile/menu']);
   	}
   	this.activatedRoute.params
-	.subscribe(
-		(params: any) => {
-		this.userId = params['userId'];
-		this.userService.findUserById(this.userId)
-		  .subscribe(
-		    (user:any)=>{
-		      this.user = user;
-		    },
-		    (error:any)=>{
-		      console.log(error);
+    	.subscribe(
+    		(params: any) => {
+    		this.userId = params['userId'];
+    		this.userService.findUserById(this.userId)
+    		  .subscribe(
+    		    (user:any)=>{
+    		      this.user = user;
+              console.log(this.user);
+    		    },
+    		    (error:any)=>{
+    		      console.log(error);
 
-		    }
-		    );
-		}
-	);
+    		    }
+    		    );
+    		}
+    	);
 	
   }
   deleteUser(userId:string){

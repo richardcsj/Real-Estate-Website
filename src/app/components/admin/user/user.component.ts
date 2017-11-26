@@ -43,7 +43,7 @@ adminId:string;
   }
   activate(user:any){
   	user.valid = true;
-  	user.validatedBy = this.admin;
+  	user.validatedBy = this.admin._id;
   	this.userService.updateUser(user._id,user)
         .subscribe(
           (res:any) => {           
@@ -61,7 +61,6 @@ adminId:string;
   }
   deactivate(user:any){
   	user.valid = false;
-    user.validatedBy = {};
   	this.userService.updateUser(user._id,user)
         .subscribe(
           (res:any) => {           

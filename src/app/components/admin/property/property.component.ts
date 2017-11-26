@@ -26,7 +26,6 @@ adminId:string;
   ngOnInit() {
     this.admin = this.sharedService.user;
     this.adminId = this.admin._id;
-  	this.activatedRoute.params
     if(!this.admin.valid || this.admin.role!='admin'){
 		    this.router.navigate(['profile/menu']);
 		  }
@@ -47,7 +46,7 @@ adminId:string;
   }
   activate(property:any){
   	property.valid = true;
-  	property.validatedBy = this.admin;
+  	property.validatedBy = this.admin._id;
   	this.propertyService.updateProperty(property._id,property)
         .subscribe(
           (res:any) => {           

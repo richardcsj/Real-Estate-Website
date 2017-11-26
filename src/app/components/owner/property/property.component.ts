@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import {Component, OnInit,ViewChild } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
@@ -22,6 +22,9 @@ export class OwnerPropertyComponent implements OnInit {
   latitude:string;
   longitude:string;
   customer:any;
+  valid:boolean;
+  available:boolean;
+  validatedBy:any;
   //other properties
   ownerId:string;
   properties:any;
@@ -37,46 +40,13 @@ export class OwnerPropertyComponent implements OnInit {
   ngOnInit() {
   	this.owner = this.sharedService.user;
     this.ownerId = this.owner._id;
-		this.propertyService.findPropertiesByOwner(this.ownerId)
-			.subscribe(
-				(properties:any)=>{
-					this.properties = properties;
-					this.userService.findAllUsers()
-						.subscribe(
-								(users:any)=>{
-									this.users = users;
-									for(let i = 0;i<this.properties.length;i++){
-										for(let j =0;j<this.users.length;j++){
-											if(this.properties[i].customer._id === this.users[j]._id){
-												this.properties[i].customer = this.users[j];
-											}
-										}
-                    this.propertyService.updateProperty(this.properties[i]._id,this.properties[i])
-                      .subscribe(
-                        (res:any) => {           
-
-                        },
-                        (error:any) => {
-                          
-                        }
-                      );
-									}
-								},
-								(error:any)=>{
-									console.log(error);
-								}
-							)
-				},
-				(error:any)=>{
-					console.log(error);
-				}
-				);
+		this.loadData();
   		
   }
   save(){
   	let property = {type:this.type,description:this.description,
   					valid:false,available:true,size:this.size,price:this.price,
-  					owner:{_id:this.ownerId},customer:{_id:""},latitude:this.latitude,longitude:this.longitude,validatedBy:""}
+  					owner:this.owner._id,latitude:this.latitude,longitude:this.longitude}
   	this.propertyService.createProperty(this.ownerId,property)
   		.subscribe(
   				(res:any) => {           
@@ -90,11 +60,19 @@ export class OwnerPropertyComponent implements OnInit {
 
 		          }
   			);
+      this.loadData();
   }
   update(){
   	let property = {_id:this.propertyId,type:this.type,description:this.description,
-  					valid:false,available:true,size:this.size,price:this.price,
-  					owner:{_id:this.ownerId},customer:this.customer,latitude:this.latitude,longitude:this.longitude,validatedBy:""}
+  					valid:this.valid,available:this.available,size:this.size,price:this.price,
+  					owner:this.ownerId,
+            latitude:this.latitude,longitude:this.longitude,customer:null,validatedBy:null}
+    if(this.customer){
+      property.customer = this.customer._id;
+    }
+    if(this.validatedBy){
+      property.validatedBy = this.validatedBy._id;
+    }
   	this.propertyService.updateProperty(property._id,property)
   		.subscribe(
   				(res:any) => {           
@@ -108,6 +86,7 @@ export class OwnerPropertyComponent implements OnInit {
 
 		          }
   			);
+      this.loadData();
   }
   edit(property:any){
   	this.propertyId = property._id ;
@@ -118,9 +97,39 @@ export class OwnerPropertyComponent implements OnInit {
   	this.latitude = property.latitude;
   	this.longitude = property.longitude;
   	this.customer = property.customer;
+    this.valid = property.valid;
+    this.available = property.available;
+    this.validatedBy = property.validatedBy; 
+  }
+  delete(propertyId:string){
+    this.propertyService.deleteProperty(propertyId)
+      .subscribe(
+          (deleted:any)=>{           
+                this.messageFlag = true;
+                this.message = 'Property deleted Successfully';
+              },
+              (error:any) => {
+                this.errorFlag = true;
+                this.errorMsg = 'cannot delete property';
+
+              }
+        );
+      this.loadData();
   }
   back(){
   	this._location.back();
   }
+  loadData(){
+    this.propertyService.findPropertiesByOwner(this.ownerId)
+      .subscribe(
+        (properties:any)=>{
+          this.properties = properties;
+        },
+        (error:any)=>{
+          console.log(error);
+        }
+        );
+  }
+
 
 }

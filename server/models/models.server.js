@@ -15,7 +15,9 @@ module.exports = function(app){
   	});
   	mongoose.Promise = require('bluebird');
   	var userModel = require('./user/user.model.server.js')(app,mongoose);
+    var propertyModel = require('./property/property.model.server.js')(app,mongoose);
   	return {
-  		userModel:userModel
+  		userModel:userModel,
+      propertyModel:propertyModel
   	 }
 }

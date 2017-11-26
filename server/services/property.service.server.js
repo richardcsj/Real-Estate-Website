@@ -1,5 +1,6 @@
 module.exports=function(app,models){
-
+  var propertyModel = models.propertyModel;
+/*
 properties = [
     {_id:"12",type:"appartment",description:"Apartment For Rent Unfurnished Rental Studio, 1 bath",size:950,latitude:40.702029,longitude:-73.989844,
     available:true,price:2500,valid:true,owner:{_id:"234"},customer:{_id:""},validatedBy:"123"},
@@ -12,7 +13,7 @@ properties = [
     {_id:"56",type:"offices",description:"Offices for rent in Washington",size:1200,latitude:47.415544,longitude:-119.169559,
     available:true,price:4000,valid:true,owner:{_id:"234"},customer:{_id:""},validatedBy:"123"}
   ]
-
+*/
   api = {
     'createProperty': createProperty,
     'findAllProperties' : findAllProperties,
@@ -32,75 +33,87 @@ properties = [
   function createProperty(req,res){
   	var property = req.body.property;
   	var ownerId = req.params.ownerId;
-		if(property!=undefined){
-			property._id = Math.floor(Math.random()*900) + 100;
-      property._id = ""+property._id;
-			property.owner = {_id:ownerId};
-			properties.push(property);
-			res.send(property);
-		}else{
-      res.status(500).send("Couldn't create property");
-    }
+    property.owner = ownerId;
+    propertyModel.createProperty(property)
+      .then(
+        function(result){
+          res.send(result);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't create property");
+        }
+      );
   }
 
   function findAllProperties(req,res){
-    res.send(properties);
+    propertyModel.findAllProperties()
+      .then(
+        function(properties){
+          res.send(properties);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't find properties");
+        }
+      );
   }
 
   function findAllPropertiesForOwner(req,res){
   	var ownerId = req.params.ownerId;
-  	var resultProperties = [];
-    for (var x = 0; x < properties.length; x++) {
-      if (properties[x].owner._id === ownerId) {
-        resultProperties.push(properties[x]);
-      }
-    }
-    res.send(resultProperties);
+  	propertyModel.findAllPropertiesForOwner(ownerId)
+      .then(
+        function(properties){
+          res.send(properties);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't find properties");
+        }
+      );
   }
 
   function findPropertyById(req,res){
   	var propertyId = req.params.propertyId;
-    var found = false;
-  	for(var x = 0; x < properties.length; x++){
-  		if(properties[x]._id === propertyId){
-  			res.send(properties[x]);
-        found = true;
-  		}
-  	}
-    if(!found)
-      res.status(404).send('Not found');
+    propertyModel.findPropertyById(propertyId)
+      .then(
+        function(properties){
+          res.send(properties);
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't find property for propertyId");
+        }
+      );
   }
 
   function updateProperty(req,res){
   	var propertyId = req.params.propertyId;
   	var property = req.body.property;
-    var edited = false;
-  	for (var x = 0; x < properties.length; x++) {
-      if (properties[x]._id === propertyId) {
-        properties[x] = property;
-        edited = true;
-        res.send({updated:true});
-      }
-    }
-    if(!edited)
-      res.status(404).send("couldn't find property for propertyId");
+    propertyModel.updateProperty(propertyId,property)
+      .then(
+        function(property){
+          res.send(property);
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't update property for propertyId");
+        }
+      );
   }
 
   function deleteProperty(req,res){
   	var propertyId = req.params.propertyId;
-    var deleted = false;
-  	for (var x = 0; x < properties.length; x++) {
-      if (properties[x]._id === propertyId) {
-        var index = properties.indexOf(properties[x], 0);
-        if (index > -1) {
-           properties.splice(index, 1);
-           deleted = true;
-           res.send({deleted:true});
+    propertyModel.deleteProperty(propertyId)
+      .then(
+        function(properties){
+          res.send({deleted:true});
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't delete property for propertyId");
         }
-      }
-    }
-    if(!deleted)
-      res.status(404).send("couldn't find property for propertyId");
+      );
   }
 
 	
