@@ -48,6 +48,8 @@ export class OwnerPropertyComponent implements OnInit {
     this.titleService.setTitle( "My properties" );
   	this.owner = this.sharedService.user;
     this.ownerId = this.owner._id;
+    this.latitude = "0";
+    this.longitude = "0";
 		this.loadData();
     this.activatedRoute.params
       .subscribe(
