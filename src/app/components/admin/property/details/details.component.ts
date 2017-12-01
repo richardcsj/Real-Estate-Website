@@ -4,6 +4,7 @@ import {UserService} from "../../../../services/user.service";
 import {PropertyService} from "../../../../services/property.service";
 import {SharedService} from "../../../../services/shared.service";
 import {Location} from '@angular/common';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-details',
@@ -16,10 +17,13 @@ propertyId:string;
   adminId:string;
   property:any;
   admin:any;
+  showLocationFlag:boolean;
   constructor(private userService: UserService, private propertyService: PropertyService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location,private sharedService:SharedService) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService,
+  	private titleService: Title) { }
 
   ngOnInit() {
+  	this.titleService.setTitle( "Administration : Property Details" );
   	this.activatedRoute.params
 	.subscribe(
 		(params: any) => {
@@ -52,6 +56,7 @@ propertyId:string;
 	    );
 
   }
+
   back(){
     this._location.back();
   }

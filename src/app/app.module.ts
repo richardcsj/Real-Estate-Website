@@ -8,6 +8,10 @@ import {PropertyService} from './services/property.service';
 import {ReviewService} from './services/review.service';
 import {SharedService} from './services/shared.service';
 import {AuthGuard} from './services/auth-guard.service';
+import { AgmCoreModule } from '@agm/core';
+import {GMapsService} from './services/gmaps.service';
+
+
 
 
 import { AppComponent } from './app.component';
@@ -29,6 +33,8 @@ import { OwnerPropertyComponent } from './components/owner/property/property.com
 import { OwnerReviewComponent } from './components/owner/review/review.component';
 import { SearchComponent } from './components/customer/search/search.component';
 import { ListComponent } from './components/customer/list/list.component';
+import { RentalsComponent } from './components/customer/rentals/rentals.component';
+
 
 
 @NgModule({
@@ -51,15 +57,19 @@ import { ListComponent } from './components/customer/list/list.component';
     OwnerPropertyComponent,
     OwnerReviewComponent,
     SearchComponent,
-    ListComponent
+    ListComponent,
+    RentalsComponent
   ],
   imports: [
     BrowserModule,
     HttpModule,
     FormsModule,
-    Routing
+    Routing,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBID0s0Lauq-vzzH-V17TCKGaIi3Vd7UCY'
+    })
   ],
-  providers: [UserService,PropertyService,ReviewService,SharedService,AuthGuard],
+  providers: [UserService,PropertyService,ReviewService,SharedService,AuthGuard,GMapsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

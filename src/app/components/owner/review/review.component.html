@@ -16,8 +16,8 @@
             <td>{{review._id}}</td>
             <td>{{review.rate}} stars</td>
             <td>{{review.text}}</td>
-            <td>{{review.property}}</td>
-            <td>{{review.customer}}</td>
+            <td><a [routerLink]="['../property',review.property._id]">{{review.property.type}}</a></td>
+            <td><a [routerLink]="['../client',review.customer._id]">{{review.customer.username}}</a></td>
           </tr>
       </table>
 

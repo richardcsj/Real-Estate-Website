@@ -5,6 +5,7 @@ import {PropertyService} from "../../../services/property.service";
 import {ReviewService} from "../../../services/review.service";
 import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-review',
@@ -17,9 +18,11 @@ export class OwnerReviewComponent implements OnInit {
   reviews:any;
   owner:any;
   constructor(private userService: UserService,private reviewService: ReviewService,private propertyService: PropertyService,
-  	 private activatedRoute: ActivatedRoute, private router: Router,private _location: Location,private sharedService:SharedService) { }
+  	 private activatedRoute: ActivatedRoute, private router: Router,private _location: Location,private sharedService:SharedService,
+  	 private titleService: Title ) { }
 
   ngOnInit() {
+  	this.titleService.setTitle( "My reviews" );
   	this.owner = this.sharedService.user;
     this.ownerId = this.owner._id;
 		this.reviewService.findAllReviews()
@@ -31,7 +34,7 @@ export class OwnerReviewComponent implements OnInit {
 								(properties:any)=>{
 									for(let i=0;i<reviews.length;i++){
 										for(let j=0;j<properties.length;j++){
-											if(reviews[i].property==properties[j]._id){
+											if(reviews[i].property._id==properties[j]._id){
 												this.reviews.push(reviews[i]);
 											}
 										}

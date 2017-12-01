@@ -17,8 +17,8 @@
             <td>{{review._id}}</td>
             <td>{{review.rate}} stars</td>
             <td>{{review.text}}</td>
-            <td><a [routerLink]="['../property',review.property]" >{{review.property}}</a></td>
-            <td><a [routerLink]="['../user',review.customer]" >{{review.customer}}</a></td>
+            <td><a [routerLink]="['../property',review.property._id]" >{{review.property.type}}</a></td>
+            <td><a [routerLink]="['../user',review.customer._id]" >{{review.customer.username}}</a></td>
             <td> <button (click)="remove(review._id)" class="btn btn-danger" ><i class="glyphicon glyphicon-remove" ></i></button></td>
           </tr>
       </table>

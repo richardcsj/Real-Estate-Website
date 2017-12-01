@@ -4,6 +4,7 @@ import {UserService} from "../../../services/user.service";
 import {PropertyService} from "../../../services/property.service";
 import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-client',
@@ -16,33 +17,38 @@ ownerId:string;
   client:any;
   owner:any;
   constructor(private userService: UserService, private propertyService: PropertyService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location,private sharedService:SharedService) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService,private titleService: Title ) { }
 
   ngOnInit() {
+    this.titleService.setTitle( "My clients" );
   	this.owner = this.sharedService.user;
     this.ownerId = this.owner._id;
-	this.userService.findAllUsers()
-	  		.subscribe(
-	  			(users:any)=>{
+    this.activatedRoute.params
+    	.subscribe(
+    			(params:any)=>{
+    				if(params['clientId']){
+    					this.userService.findUserById(params['clientId'])
+    						.subscribe(
+    								(user:any)=>{
+    									this.contact(user);
+    								}
+    							)
+    				}
+    			}
+    		)
 	  				this.propertyService.findPropertiesByOwner(this.ownerId)
 	  					.subscribe(
 	  						(properties:any)=>{
 	  							this.clients = [];
 	  							for(let i = 0 ; i< properties.length;i++){
-	  								for(let j = 0 ; j < users.length;j++){
-	  									if(properties[i].customer._id == users[j]._id){
-	  										users[j].property = properties[i];
-	  										this.clients.push(users[j]);
-	  									}
+	  								if(!properties[i].available){
+	  									let client = properties[i].customer;
+	  									client.property = properties[i];
+	  								    this.clients.push(client);
 	  								}
 	  							}
 	  						}
-	  						)
-	  			},
-	  			(error:any)=>{
-	  				console.log(error);
-	  			}
-	  			);
+	  						);
   	}
   contact(client:any){
   	this.client = client;

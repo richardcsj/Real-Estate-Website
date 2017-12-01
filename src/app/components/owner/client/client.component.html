@@ -32,7 +32,7 @@
 	            <td>{{client._id}}</td>
 	            <td>{{client.firstName}}</td>
 	            <td>{{client.lastName}}</td>
-	            <td>{{client.property._id}}</td>
+	            <td><a [routerLink]="['../property',client.property._id]" >{{client.property.type}}</a></td>
 	            <td><button (click)="contact(client)" class="btn btn-primary" >Contact</button></td>
 	          </tr>
 	      </table>

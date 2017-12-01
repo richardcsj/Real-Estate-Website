@@ -1,11 +1,5 @@
 module.exports=function(app,models){
-
-	reviews = [
-		{_id:"1",rate:5,text:"Very nice appartment",property:"12",customer:"345"},
-		{_id:"2",rate:4,text:"Very good service",property:"12",customer:"456"},
-		{_id:"3",rate:2,text:"Needs more work",property:"23",customer:"456"}
-	]
-
+  var reviewModel = models.reviewModel;
 	api = {
     'createReview': createReview,
     'findAllReviews' : findAllReviews,
@@ -24,74 +18,86 @@ module.exports=function(app,models){
 
   function createReview(req,res){
   	var review = req.body.review;
-		if(review!=undefined){
-			review._id = Math.floor(Math.random()*900) + 100;
-      		review._id = ""+review._id;
-			reviews.push(review);
-			res.send(review);
-		}else{
-      res.status(500).send("Couldn't create review");
-    }
+		reviewModel.createReview(review)
+      .then(
+        function(result){
+          res.send(result);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't create review");
+        }
+      );
   }
 
   function findAllReviews(req,res){
-    res.send(reviews);
+    reviewModel.findAllReviews()
+      .then(
+        function(reviews){
+          res.send(reviews);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't find reviews");
+        }
+      );
   }
 
   function findAllReviewsForProperty(req,res){
   	var propertyId = req.params.propertyId;
-  	var resultReviews = [];
-    for (var x = 0; x < reviews.length; x++) {
-      if (reviews[x].property === propertyId) {
-        resultReviews.push(reviews[x]);
-      }
-    }
-    res.send(resultReviews);
+  	reviewModel.findAllReviewsForProperty(propertyId)
+      .then(
+        function(reviews){
+          res.send(reviews);
+        },
+        function(error){
+          console.log(error);
+          res.status(500).send("Couldn't find reviews");
+        }
+      );   
   }
 
   function findReviewById(req,res){
   	var reviewId = req.params.reviewId;
-    var found = false;
-  	for(var x = 0; x < reviews.length; x++){
-  		if(reviews[x]._id === reviewId){
-  			res.send(reviews[x]);
-        found = true;
-  		}
-  	}
-    if(!found)
-      res.status(404).send('Not found');
+    reviewModel.findReviewById(reviewId)
+      .then(
+        function(review){
+          res.send(review);
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't find review for reviewId");
+        }
+      );
   }
 
   function updateReview(req,res){
   	var reviewId = req.params.reviewId;
   	var review = req.body.review;
-    var edited = false;
-  	for (var x = 0; x < reviews.length; x++) {
-      if (reviews[x]._id === reviewId) {
-        reviews[x] = review;
-        edited = true;
-        res.send({updated:true});
-      }
-    }
-    if(!edited)
-      res.status(404).send("couldn't find review for reviewId");
+    reviewModel.updateReview(reviewId,review)
+      .then(
+        function(review){
+          res.send(review);
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't update review for reviewId");
+        }
+      );
   }
 
   function deleteReview(req,res){
   	var reviewId = req.params.reviewId;
-    var deleted = false;
-  	for (var x = 0; x < reviews.length; x++) {
-      if (reviews[x]._id === reviewId) {
-        var index = reviews.indexOf(reviews[x], 0);
-        if (index > -1) {
-           reviews.splice(index, 1);
-           deleted = true;
-           res.send({deleted:true});
+    reviewModel.deleteReview(reviewId)
+      .then(
+        function(res){
+          res.send({deleted:true});
+        },
+        function(error){
+          console.log(error);
+          res.status(404).send("Couldn't delete review for reviewId");
         }
-      }
-    }
-    if(!deleted)
-      res.status(404).send("couldn't find review for reviewId");
+      );
   }
 
 

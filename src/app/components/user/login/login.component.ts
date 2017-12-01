@@ -3,6 +3,7 @@ import {NgForm} from '@angular/forms';
 import {UserService} from "../../../services/user.service";
 import {Routes, RouterModule,ActivatedRoute,Router} from "@angular/router";
 import {SharedService} from "../../../services/shared.service";
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -18,9 +19,10 @@ export class LoginComponent implements OnInit {
   errorFlag: boolean;
   errorMsg = 'Invalid username or password !';
   constructor(private userService: UserService,private route: ActivatedRoute,
-            private router: Router,private sharedService : SharedService) {}
+            private router: Router,private sharedService : SharedService,private titleService: Title ) {}
 
   ngOnInit() { 
+    this.titleService.setTitle( "Login" );
     if(this.userService.loggedIn()){
           this.router.navigate(['/profile']);
         }

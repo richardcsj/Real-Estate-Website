@@ -6,13 +6,14 @@ import {ReviewService} from "../../../services/review.service";
 import {SharedService} from "../../../services/shared.service";
 import {Location} from '@angular/common';
 import { Title }     from '@angular/platform-browser';
+
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  selector: 'app-rentals',
+  templateUrl: './rentals.component.html',
+  styleUrls: ['./rentals.component.css']
 })
-export class ListComponent implements OnInit {
-customerId:string;
+export class RentalsComponent implements OnInit {
+  customerId:string;
   properties:any;
   property:any;
   users:any;
@@ -26,75 +27,63 @@ customerId:string;
   //review
   rate:number;
   review:string;
-  Arr = Array;
-  Math:any;
   constructor(private userService: UserService,private propertyService: PropertyService,private reviewService: ReviewService, private activatedRoute: ActivatedRoute,
   	private router: Router,private _location: Location,private sharedService:SharedService,private titleService: Title ) { }
 
   ngOnInit() {
-    this.titleService.setTitle( "List of Properties" );
-    this.Math = Math;
+    this.titleService.setTitle( "My rentals" );
   	this.customer = this.sharedService.user;
     this.customerId = this.customer._id;
-    this.activatedRoute.params
-      .subscribe(
-          (params:any)=>{
-            this.type = params['type'];
-            this.propertyService.findAllProperties()
-              .subscribe(
-                (properties:any)=>{
-                  this.properties = [];
-                         for(let i = 0;i<properties.length;i++){
-                             if(this.type && properties[i].type==this.type){
-                              this.properties.push(properties[i]);   
-                             }else if(this.type == undefined){
-                              this.properties.push(properties[i]);
-                             }
-                          }
-                },
-                (error:any)=>{
-                  console.log(error);
-                }
-                );
-          }
-        );
-	  
+	this.loadMyRentals();
 
   }
   details(property:any){
   	this.property = property;
-    this.property.avg = 0;
   	this.reviewService.findReviewsForProperty(property._id)
   		.subscribe(
   			(reviews:any)=>{
   				this.property.reviews = reviews;
-          let rate = 0;
-          for(let i = 0;i<this.property.reviews.length;i++){
-            if(this.property.reviews[i].rate)
-              rate+=this.property.reviews[i].rate;
-          }
-          if(this.property.reviews.length>0)
-            rate = rate/this.property.reviews.length;
-          this.property.avg = rate;
   			}
-  		)
+  			)
   }
-  rent(property:any){
-  	property.customer = this.customerId;
-  	property.available = false;
+  cancel(property:any){
+  	if(this.property && property._id==this.property._id){
+  		this.property = undefined;
+  	}
+  	property.customer = null;
+  	property.available = true;
   	this.propertyService.updateProperty(property._id,property)
   		.subscribe(
   			(res:any) => {           
             this.messageFlag = true;
-            this.message = 'You rented property with ID '+property._id;
+            this.message = 'You left property with ID '+property._id;
+
 
           },
           (error:any) => {
             this.errorFlag = true;
-            this.errorMsg = 'cannot rent property';
+            this.errorMsg = 'cannot leave property';
 
           }
-  			)
+  			);
+  		this.loadMyRentals();
+
+  }
+  loadMyRentals(){
+  	this.propertyService.findAllProperties()
+			.subscribe(
+				(properties:any)=>{
+					this.properties = [];
+					 for(let i = 0;i<properties.length;i++){
+	                     if(properties[i].customer && properties[i].customer._id==this.customerId){
+	                      this.properties.push(properties[i]);
+	                     }
+                    }
+				},
+				(error:any)=>{
+					console.log(error);
+				}
+				);
 
   }
   back(){
@@ -120,6 +109,5 @@ customerId:string;
             this.errorMsg = 'cannot add review';
         });
   }
-  
 
 }

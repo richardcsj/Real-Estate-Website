@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {SharedService} from "../../../services/shared.service";
+import { Title }     from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile',
@@ -24,10 +25,10 @@ export class ProfileComponent implements OnInit {
   messageFlag:boolean;
   message : string;
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private sharedService : SharedService) { }
+  	private router: Router,private sharedService : SharedService,private titleService: Title ) { }
 
   ngOnInit() {
-  	
+  	  this.titleService.setTitle( "Your profile : "+this.user['username'] );
       this.user = this.sharedService.user;
       this.userId = this.user['_id'];
       this.username = this.user['username'];

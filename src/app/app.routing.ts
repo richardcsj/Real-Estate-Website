@@ -15,6 +15,7 @@ import { OwnerPropertyComponent } from './components/owner/property/property.com
 import { OwnerReviewComponent } from './components/owner/review/review.component';
 import { SearchComponent } from './components/customer/search/search.component';
 import { ListComponent } from './components/customer/list/list.component';
+import { RentalsComponent } from './components/customer/rentals/rentals.component';
 import {AuthGuard} from './services/auth-guard.service';
 
 
@@ -32,11 +33,14 @@ const APP_ROUTES : Routes = [
   { path: 'admin/user/:userId', component: UserDetailsComponent},
   { path: 'admin/property/:propertyId', component:PropertyDetailsComponent},
   { path: 'owner/client',component:ClientComponent},
+  { path: 'owner/client/:clientId',component:ClientComponent},
   { path: 'owner/property',component:OwnerPropertyComponent},
+  { path: 'owner/property/:propertyId',component:OwnerPropertyComponent},
   { path: 'owner/review',component:OwnerReviewComponent},
   { path : 'customer/search',component:SearchComponent},
   { path : 'customer/list',component:ListComponent},
-  { path : 'customer/type/:type',component:ListComponent}
+  { path : 'customer/type/:type',component:ListComponent},
+  { path : 'customer/rentals',component:RentalsComponent}
 ];
 // Export the routes as module providers
 export const Routing: ModuleWithProviders = RouterModule.forRoot(APP_ROUTES);

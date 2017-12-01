@@ -25,45 +25,18 @@
               Size : <b>{{property.size}} m²</b><br>
               Price : <b>{{property.price}}$/month</b><br>
               Location : <button class="btn btn-success" *ngIf="!showLocationFlag"  (click)="showLocationFlag=true" >Show Location</button>
-              <button class="btn btn-primary" *ngIf="showLocationFlag" (click)="showLocationFlag=false" >Hide Location</button><br>
-              <agm-map *ngIf="showLocationFlag" [zoom]="16"  [latitude]="property.latitude" [longitude]="property.longitude">
-                <agm-marker [latitude]="property.latitude" [longitude]="property.longitude"></agm-marker>
-              </agm-map>
+			    <button class="btn btn-primary" *ngIf="showLocationFlag" (click)="showLocationFlag=false" >Hide Location</button><br>
+			    <agm-map *ngIf="showLocationFlag" [zoom]="16" [latitude]="property.latitude" [longitude]="property.longitude">
+			    	<agm-marker [latitude]="property.latitude" [longitude]="property.longitude"></agm-marker>
+				</agm-map>
               Available : <b>{{property.available}}</b><br>
               Owner : <b>{{property.owner.username}}</b><br>
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="rating-block">
-                  <h4>Average user rating</h4>
-                  <h2 class="bold padding-bottom-7">{{property.avg}}<small>/ 5</small></h2>
-                  <button *ngFor="let i of Arr(Math.round(property.avg)).fill(1)"  type="button" class="btn btn-warning btn-sm" aria-label="Left Align">
-                    <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                  </button>
-                </div>
-              </div>
-            </div>
-              <div class="row">
-                <div class="col-sm-12">
-                  <hr/>
-                  <div class="review-block">
-                    <div *ngFor="let review of property.reviews" class="row">
-                      <div class="col-sm-3">
-                        <img src="http://dummyimage.com/60x60/666/ffffff&text=No+Image" class="img-rounded">
-                        <div class="review-block-name">{{review.customer.username}}</div>
-                        <div class="review-block-date">{{review.dateCreated| date:"MM/dd/yyyy 'at' h:mma"}}</div>
-                      </div>
-                      <div class="col-sm-9">
-                        <div class="review-block-rate">
-                          <button *ngFor="let i of Arr(review.rate).fill(1)" type="button" class="btn btn-warning btn-xs" aria-label="Left Align">
-                            <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
-                          </button>
-                        </div>
-                        <div class="review-block-description">{{review.text}}</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              Reviews : <br>
+              <ul>
+                <li *ngFor="let review of property.reviews">
+                  {{review.text}} - ({{review.rate}} stars)
+                </li>
+              </ul>
               <div class="row" style="margin-top:40px;">
                   <div class="well well-sm">
                         <div class="row" id="post-review-box" style="display:block;">
@@ -99,9 +72,9 @@
           <tr *ngFor="let property of properties">
             <td>{{property._id}}</td>
             <td>{{property.type}}</td>
-            <td><a [routerLink]="['../user',property.owner._id]" >{{property.owner.username}}</a></td>
+            <td>{{property.owner.username}}</td>
             <td>{{property.available}}</td>
-            <td><button (click)="details(property)" [disabled]="!property.valid" class="btn btn-primary" ><i class="glyphicon glyphicon-info-sign" ></i></button> | <button *ngIf="property.valid" (click)="rent(property)" class="btn btn-success" [disabled]="!property.available" >Rent</button></td>
+            <td><button (click)="details(property)" [disabled]="!property.valid" class="btn btn-primary" ><i class="glyphicon glyphicon-info-sign" ></i></button> | <button *ngIf="property.valid" (click)="cancel(property)" class="btn btn-danger" [disabled]="property.available" >Leave</button></td>
           </tr>
       </table>
         </div>

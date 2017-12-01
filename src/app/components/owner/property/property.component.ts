@@ -4,7 +4,10 @@ import {Router,ActivatedRoute} from "@angular/router";
 import {UserService} from "../../../services/user.service";
 import {PropertyService} from "../../../services/property.service";
 import {SharedService} from "../../../services/shared.service";
+import {GMapsService} from "../../../services/gmaps.service";
 import {Location} from '@angular/common';
+import { Title }     from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-property',
@@ -25,6 +28,7 @@ export class OwnerPropertyComponent implements OnInit {
   valid:boolean;
   available:boolean;
   validatedBy:any;
+  address:string;
   //other properties
   ownerId:string;
   properties:any;
@@ -34,13 +38,30 @@ export class OwnerPropertyComponent implements OnInit {
   errorMsg :string;
   messageFlag:boolean;
   message : string;
+  loading:boolean;
+  showLocationFlag:boolean;
   constructor(private userService: UserService,private propertyService: PropertyService, private activatedRoute: ActivatedRoute,
-  	private router: Router,private _location: Location,private sharedService:SharedService) { }
+  	private router: Router,private _location: Location,private sharedService:SharedService,
+    private gmaps:GMapsService,private titleService: Title ) { }
 
   ngOnInit() {
+    this.titleService.setTitle( "My properties" );
   	this.owner = this.sharedService.user;
     this.ownerId = this.owner._id;
 		this.loadData();
+    this.activatedRoute.params
+      .subscribe(
+          (params:any)=>{
+            if(params['propertyId']){
+              this.propertyService.findPropertyById(params['propertyId'])
+                .subscribe(
+                    (property:any)=>{
+                      this.edit(property);
+                    }
+                  )
+            }
+          }
+        )
   		
   }
   save(){
@@ -100,6 +121,7 @@ export class OwnerPropertyComponent implements OnInit {
     this.valid = property.valid;
     this.available = property.available;
     this.validatedBy = property.validatedBy; 
+    this.showLocationFlag = true;
   }
   delete(propertyId:string){
     this.propertyService.deleteProperty(propertyId)
@@ -120,6 +142,7 @@ export class OwnerPropertyComponent implements OnInit {
   	this._location.back();
   }
   loadData(){
+    this.errorFlag = false;
     this.propertyService.findPropertiesByOwner(this.ownerId)
       .subscribe(
         (properties:any)=>{
@@ -129,6 +152,25 @@ export class OwnerPropertyComponent implements OnInit {
           console.log(error);
         }
         );
+  }
+  getLatLan(){
+    this.loading = true;
+    this.showLocationFlag = false;
+    this.gmaps.getLatLan(this.address)
+      .subscribe(
+          (location:any)=>{
+            this.loading = false;
+            this.showLocationFlag = true;
+            this.latitude = location.lat();
+            this.longitude = location.lng();
+          },
+          (error:any)=>{
+            this.errorFlag = true;
+            this.errorMsg = 'cannot find address, please try another one';
+
+          }
+        )
+
   }
 
 

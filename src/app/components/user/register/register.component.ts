@@ -2,6 +2,8 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import {UserService} from "../../../services/user.service";
 import {Routes, RouterModule,ActivatedRoute,Router} from "@angular/router";
+import { Title }     from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-register',
@@ -19,9 +21,10 @@ export class RegisterComponent implements OnInit {
   errorFlag: boolean;
   errorMsg = 'Invalid username!';
   constructor(private userService: UserService,private route: ActivatedRoute,
-            private router: Router) { }
+            private router: Router,private titleService: Title ) { }
 
   ngOnInit() {
+    this.titleService.setTitle( "Register" );
   }
   register() {
       //hide error msg if already there

@@ -14,13 +14,16 @@
 	    Description : <b>{{property.description}}</b><br>
 	    Size : <b>{{property.size}} m²</b><br>
 	    Price : <b>{{property.price}}$/month</b><br>
-	    Latitude : <b>{{property.latitude}}</b><br>
-	    Longitude : <b>{{property.longitude}}</b><br>
+	    Location : <button class="btn btn-success" *ngIf="!showLocationFlag"  (click)="showLocationFlag=true" >Show Location</button>
+	    <button class="btn btn-primary" *ngIf="showLocationFlag" (click)="showLocationFlag=false" >Hide Location</button><br>
+	    <agm-map *ngIf="showLocationFlag" [zoom]="16"  [latitude]="property.latitude" [longitude]="property.longitude">
+	    	<agm-marker [latitude]="property.latitude" [longitude]="property.longitude"></agm-marker>
+		</agm-map>
 	    Available : <b>{{property.available}}</b><br>
 	    Owner : <b>{{property.owner.username}}</b><br>
-	    Customer : <b>{{property.customer.username}}</b><br>
+	    Customer : <b *ngIf="property.customer">{{property.customer.username}}</b><br>
 	    Valid : <b>{{property.valid}}</b><br>
-	    Validated By : <b>{{property.validatedBy.username}}</b><br>
+	    Validated By : <b *ngIf="property.validatedBy">{{property.validatedBy.username}}</b><br>
 	    <button class="btn btn-danger" (click)="deleteProperty(property._id)" >Delete Property</button>
 	  </div>
 	</div>

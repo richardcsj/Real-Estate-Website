@@ -22,7 +22,7 @@
 	    Phone : <b>{{user.phone}}</b><br>
 	    Date of birth : <b>{{user.dob}}</b><br>
 	    Verified : <b>{{user.valid}}</b><br>
-	    Validated By : <b>{{user.validatedBy.username}}</b><br>
+	    Validated By : <b *ngIf="user.validatedBy">{{user.validatedBy.username}}</b><br>
 	    <button class="btn btn-primary" (click)="makeAdmin()" >Make an admin</button>
 	    <button class="btn btn-danger" (click)="deleteUser(user._id)" >Delete user</button>
 	  </div>
