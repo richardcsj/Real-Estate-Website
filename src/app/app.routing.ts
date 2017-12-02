@@ -17,6 +17,7 @@ import { SearchComponent } from './components/customer/search/search.component';
 import { ListComponent } from './components/customer/list/list.component';
 import { RentalsComponent } from './components/customer/rentals/rentals.component';
 import {AuthGuard} from './services/auth-guard.service';
+import { NewUserComponent } from './components/admin/user/new/new.component';
 
 
 
@@ -30,6 +31,7 @@ const APP_ROUTES : Routes = [
   { path: 'admin/user', component: UserComponent},
   { path: 'admin/property', component: PropertyComponent},
   { path: 'admin/review', component: ReviewComponent},
+  { path: 'admin/user/new', component: NewUserComponent},
   { path: 'admin/user/:userId', component: UserDetailsComponent},
   { path: 'admin/property/:propertyId', component:PropertyDetailsComponent},
   { path: 'owner/client',component:ClientComponent},

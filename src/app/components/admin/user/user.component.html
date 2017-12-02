@@ -12,6 +12,7 @@
         class="alert alert-success">
         {{message}}
       </div>
+      <a [routerLink]="['new']" class="btn btn-block btn-primary" >New User</a>
       <table class="table table-bordered">
           <tr>
             <th>#</th>
@@ -29,5 +30,6 @@
             | <button (click)="deactivate(user)" class="btn btn-danger" [disabled]="!user.valid"  ><i class="glyphicon glyphicon-remove" ></i></button></td>
           </tr>
       </table>
+
 
 </div> <!-- /container -->
