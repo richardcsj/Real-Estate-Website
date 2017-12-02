@@ -26,7 +26,24 @@ adminId:string;
 	if(!this.admin.valid || this.admin.role!='admin'){
 	  	this.router.navigate(['profile/menu']);
 	  }
-    this.reviewService.findAllReviews()
+	  this.loadReviews();
+    
+  }
+  remove(reviewId:string){
+  	this.reviewService.deleteReview(reviewId)
+	  .subscribe(
+	    (done:any)=>{
+	    	this.loadReviews();
+	    },
+	    (error:any)=>{
+	      console.log(error);
+
+	    }
+	    );
+
+  }
+  loadReviews(){
+  	this.reviewService.findAllReviews()
 			.subscribe(
 				(reviews:any)=>{
 					this.reviews = reviews;
@@ -35,18 +52,6 @@ adminId:string;
 					console.log(error);
 				}
 				);
-  }
-  remove(reviewId:string){
-  	this.reviewService.deleteReview(reviewId)
-	  .subscribe(
-	    (done:any)=>{
-	      this.router.navigate(['.'],{relativeTo:this.activatedRoute});
-	    },
-	    (error:any)=>{
-	      console.log(error);
-
-	    }
-	    );
 
   }
   back(){
