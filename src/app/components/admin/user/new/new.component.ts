@@ -21,6 +21,8 @@ export class NewUserComponent implements OnInit {
   registerAs:string;
   errorFlag: boolean;
   errorMsg = 'Invalid username!';
+  messageFlag:boolean;
+  message : string;
   adminId:string;
   admin:any;
   constructor(private userService: UserService, private activatedRoute: ActivatedRoute,
