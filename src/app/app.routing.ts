@@ -18,6 +18,7 @@ import { ListComponent } from './components/customer/list/list.component';
 import { RentalsComponent } from './components/customer/rentals/rentals.component';
 import {AuthGuard} from './services/auth-guard.service';
 import { NewUserComponent } from './components/admin/user/new/new.component';
+import { EditComponent } from './components/admin/user/edit/edit.component';
 
 
 
@@ -33,6 +34,7 @@ const APP_ROUTES : Routes = [
   { path: 'admin/review', component: ReviewComponent},
   { path: 'admin/user/new', component: NewUserComponent},
   { path: 'admin/user/:userId', component: UserDetailsComponent},
+  { path: 'admin/user/:userId/edit', component: EditComponent},
   { path: 'admin/property/:propertyId', component:PropertyDetailsComponent},
   { path: 'owner/client',component:ClientComponent},
   { path: 'owner/client/:clientId',component:ClientComponent},

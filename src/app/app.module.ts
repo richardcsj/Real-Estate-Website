@@ -35,6 +35,7 @@ import { SearchComponent } from './components/customer/search/search.component';
 import { ListComponent } from './components/customer/list/list.component';
 import { RentalsComponent } from './components/customer/rentals/rentals.component';
 import { NewUserComponent } from './components/admin/user/new/new.component';
+import { EditComponent } from './components/admin/user/edit/edit.component';
 
 
 
@@ -60,7 +61,8 @@ import { NewUserComponent } from './components/admin/user/new/new.component';
     SearchComponent,
     ListComponent,
     RentalsComponent,
-    NewUserComponent
+    NewUserComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,

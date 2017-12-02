@@ -55,7 +55,7 @@ export class NewUserComponent implements OnInit {
               this.userService.createUser(this.user)
                  .subscribe(
                    (data: any) => {
-                     this.router.navigate(['/profile']);
+                     this.router.navigate(['..',data._id,'edit'],{relativeTo:this.activatedRoute});
                    },
                    (error: any) => {
                      this.errorMsg = error._body;

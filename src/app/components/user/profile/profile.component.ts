@@ -37,12 +37,14 @@ export class ProfileComponent implements OnInit {
       this.lastName = this.user['lastName'];
       this.valid = this.user['valid'];
       this.phone = this.user['phone'];
-      let fdate= this.user['dob'].split("-");
-      let day = fdate[2].split("T")[0];
-      let month = fdate[1];
-      let year = fdate[0];
-      let formattedDate = day+'/'+month+'/'+year;
-      this.dob = formattedDate;
+     if(this.user['dob']){
+              let fdate= this.user['dob'].split("-");
+              let day = fdate[2].split("T")[0];
+              let month = fdate[1];
+              let year = fdate[0];
+              let formattedDate = day+'/'+month+'/'+year;
+              this.dob = formattedDate;
+            }
     
 	
 	}
