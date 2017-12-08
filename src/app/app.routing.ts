@@ -19,12 +19,13 @@ import { RentalsComponent } from './components/customer/rentals/rentals.componen
 import {AuthGuard} from './services/auth-guard.service';
 import { NewUserComponent } from './components/admin/user/new/new.component';
 import { EditComponent } from './components/admin/user/edit/edit.component';
-
+import {IndexComponent} from "./index/index.component";
 
 
 // Import all other components here
 const APP_ROUTES : Routes = [
-  { path : '', component: HomeComponent},
+  { path : '', component: IndexComponent},
+  { path : 'home', component: HomeComponent},
   { path : 'login' , component: LoginComponent},
   { path : 'register' , component:RegisterComponent },
   { path : 'profile' , component: ProfileComponent, canActivate: [AuthGuard]},
